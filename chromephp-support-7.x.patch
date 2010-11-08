@@ -1,0 +1,52 @@
+diff --git devel.module devel.module
+index b3d1e6e..03bfbbb 100644
+--- devel.module
++++ devel.module
+@@ -386,15 +386,26 @@ function devel_init() {
+       }
+       elseif (module_exists('libraries')) {
+         // Support Libraries API - http://drupal.org/project/libraries
+-        $path = libraries_get_path('FirePHPCore') . '/lib/FirePHPCore/';
++        $firephp_path = libraries_get_path('FirePHPCore') . '/lib/FirePHPCore/';
++        $chromephp_path = libraries_get_path('chromephp');
+       }
+       else {
+-        $path = './'. drupal_get_path('module', 'devel') .'/FirePHPCore/lib/FirePHPCore/';
++        $firephp_path = './'. drupal_get_path('module', 'devel') .'/FirePHPCore/lib/FirePHPCore/';
++        $chromephp_path = './' . drupal_get_path('module', 'devel') .'/chromephp';
+       }
+-      if (file_exists($path . 'fb.php')) {
+-        include_once $path . 'fb.php';
++
++      // include FirePHP if exists...
++      if (file_exists($firephp_path .'fb.php')) {
++        include_once $firephp_path .'fb.php';
++        include_once $firephp_path .'FirePHP.class.php';
++      }
++
++      // include ChromePHP if exists...
++      if (file_exists($chromephp_path . '/ChromePhp.php')) {
++        include_once $chromephp_path . '/ChromePhp.php';
+       }
+ 
++
+       // Add CSS for query log if should be displayed.
+       if (variable_get('devel_query_display', 0)) {
+         drupal_add_css(drupal_get_path('module', 'devel') .'/devel.css');
+@@ -455,6 +466,16 @@ function dfbt($label) {
+ }
+ 
+ /**
++ * Wrapper for ChromePHP Class log method
++ */
++function dcp() {
++  if (class_exists('ChromePhp') && user_access('access devel information')) {
++    $args = func_get_args();
++    call_user_func_array(array('ChromePhp', 'log'), $args);
++  }
++}
++
++/**
+  * Implements hook_watchdog().
+  */
+ function devel_watchdog(array $log_entry) {
