@@ -1,0 +1,9 @@
+; $Id: devel.info,v 1.11 2010/01/27 23:45:52 weitzman Exp $
+name = Devel
+description = Various blocks, pages, and functions for developers.
+package = Development
+dependencies[] = menu
+core = 7.x
+files[] = devel.module
+files[] = devel.install
+configure = admin/config/development/devel
